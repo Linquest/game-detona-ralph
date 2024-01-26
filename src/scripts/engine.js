@@ -4,12 +4,48 @@ const state = {
         enemys: document.querySelector('.enemy'),
         time: document.querySelector('#time'),
         score: document.querySelector('#score'),
+        lives: document.querySelector('#lives'),
     },
     values: {
-        time: null,
+
         gameVelocity: 800,
         hitPosition: 0,
+        result: 0,
+        curretTime: 10,
+        lives: 3,
+    },
+    actions: {
+        time: setInterval(randomSquare, 1000),
+        countDownTimerId: setInterval(countDown, 1000),
     }
+}
+
+function resetGame() {
+    state.values.curretTime = 10;
+    state.values.result = 0;
+    state.values.lives = 3;
+    state.view.time.innerHTML = state.values.curretTime;
+    state.view.score.innerHTML = state.values.result;
+    state.view.lives.innerHTML = state.values.lives;
+    state.actions.time = setInterval(randomSquare, 1000);
+    state.actions.countDownTimerId = setInterval(countDown, 1000);
+}
+
+function countDown() {
+    state.values.curretTime--
+    state.view.time.innerHTML = state.values.curretTime
+    if (state.values.curretTime == 0) {
+        clearInterval(state.values.time)
+        clearInterval(state.actions.countDownTimerId)
+        alert('Game Over. Score: ' + state.values.result)
+        state.view.time.innerHTML = state.values.curretTime
+        resetGame();
+    }
+}
+
+function playSound() {
+    let audio = new Audio('../src/audios/punch.mp3')
+    audio.play()
 }
 
 function randomSquare() {
@@ -24,29 +60,40 @@ function randomSquare() {
     state.values.hitPosition = randomSquare.id
 }
 
-function moveEnemy() {
-    state.values.time = setInterval(randomSquare, state.values.gameVelocity)
+function loseLife() {
+    state.values.lives--
+    state.view.lives.innerHTML = state.values.lives
+    if (state.values.lives <= 0) {
+        clearInterval(state.values.time)
+        clearInterval(state.actions.countDownTimerId)
+        alert('Game Over. Score: ' + state.values.result)
+        state.view.time.innerHTML = state.values.curretTime
+        resetGame();
+    }
 }
 
 function addListenerHitBox() {
     state.view.squares.forEach((square) => {
         square.addEventListener('click', () => {
             if (square.id == state.values.hitPosition) {
+                state.values.result++
+                state.view.score.innerHTML = state.values.result
+                playSound()
                 square.classList.add('hit')
-                state.values.score += 1
-                state.view.score.innerHTML = state.values.score
-                state.values.hitPosition = null
+                setTimeout(() => square.classList.remove('hit'), 300)
+                randomSquare()
+            } else {
+                loseLife()
             }
         })
     })
 }
 
+
 function init() {
     randomSquare()
     addListenerHitBox()
-    moveEnemy()
-    state.values.time = 60
-    state.values.score = 0
+    countDown()
 }
 
 init()

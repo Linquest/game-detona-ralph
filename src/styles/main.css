@@ -36,8 +36,9 @@ h2 {
 .square {
     width: 150px;
     height: 9.375rem;
-    border: .0625rem solid #000000;
-    background-color: #ff0000;
+    border: .0625rem solid #ff0000;
+    border-radius: 6px;
+    background: #808080c0;
 }
 
 .enemy {
