@@ -11,7 +11,7 @@ const state = {
         gameVelocity: 800,
         hitPosition: 0,
         result: 0,
-        curretTime: 10,
+        curretTime: 30,
         lives: 3,
     },
     actions: {
@@ -21,7 +21,7 @@ const state = {
 }
 
 function resetGame() {
-    state.values.curretTime = 10;
+    state.values.curretTime = 30;
     state.values.result = 0;
     state.values.lives = 3;
     state.view.time.innerHTML = state.values.curretTime;
